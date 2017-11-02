@@ -317,7 +317,12 @@ class WP2GravAdmin extends WP2Grav
         );
 
         //override pageFileName property
-        $blogPageArray[0]['page']->pageFileName = 'blog';
+        
+        if ($blogPageArray[0]['page']) {
+        
+            $blogPageArray[0]['page']->pageFileName = 'blog';
+        
+        }
 
         $this->processExport($blogPageArray, $qt, $qtranslate_slug, null, 'item');
 
