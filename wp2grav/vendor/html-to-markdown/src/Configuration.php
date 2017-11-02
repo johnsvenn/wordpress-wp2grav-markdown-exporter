@@ -1,6 +1,5 @@
 <?php
 
-
 namespace League\HTMLToMarkdown;
 
 class Configuration
