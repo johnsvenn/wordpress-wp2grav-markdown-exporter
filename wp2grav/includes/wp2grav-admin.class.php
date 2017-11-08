@@ -103,6 +103,7 @@ class WP2GravAdmin extends WP2Grav
     public static function displayNotices()
     {
         if ($notices = get_option('wp2grav_deferred_admin_notices')) {
+
             foreach ($notices as $notice) {
                 $message = $notice;
                 $type = 'updated';
@@ -153,6 +154,9 @@ class WP2GravAdmin extends WP2Grav
             case 'export':
                 $this->export();
                 break;
+            case 'remove':
+                $this->remove();
+                break;
             default:
                 break;
         }
@@ -200,7 +204,7 @@ class WP2GravAdmin extends WP2Grav
      */
     public function exportPage()
     {
-        WP2GravView::page('admin/export');
+        WP2GravView::page('admin/export', array('export_directory_exists' => $this->exportDirectoryExists()));
     }
 
     /**
@@ -253,6 +257,43 @@ class WP2GravAdmin extends WP2Grav
         } else {
             return false;
         }
+    }
+    
+    /**
+     * Check whether the export directory actually exists
+     * @return boolean
+     */
+    public function exportDirectoryExists()
+    {
+        
+        if (file_exists($this->destination)) {
+            
+            return true;
+            
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Delete an existing export directory to allow for a new export
+     * 
+     * @return void
+     */
+    protected function remove()
+    {
+        
+        
+        
+        $this->rrmdir($this->destination);
+        
+        $this->addNotice(WP2GravView::notice('admin/export-removed'));
+        
+        $location = admin_url('admin.php?page=' . $this->plugin . '-export');
+        
+        wp_safe_redirect( $location );
+        
+        exit();
     }
 
     /**
@@ -327,7 +368,7 @@ class WP2GravAdmin extends WP2Grav
         $this->processExport($blogPageArray, $qt, $qtranslate_slug, null, 'item');
 
 
-        $this->addNotice(WP2GravView::notice('admin/export-success'). $this->destination);
+        $this->addNotice(WP2GravView::notice('admin/export-success'). '<br />' . $this->destination);
 
         wp_reset_postdata();
 

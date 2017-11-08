@@ -51,9 +51,9 @@ class WP2GravView
      *
      * @return void
      */
-    public static function page($slug)
+    public static function page($slug, $vars = array())
     {
-        self::template($slug, 'page');
+        self::template($slug, 'page', $vars);
     }
 
     /**
@@ -65,7 +65,7 @@ class WP2GravView
      *
      * @return void
      */
-    protected static function template($slug, $type)
+    protected static function template($slug, $type, $vars = array())
     {
         include plugin_dir_path(__FILE__)
             . '../templates/' . $slug . '.' . $type . '.php';
